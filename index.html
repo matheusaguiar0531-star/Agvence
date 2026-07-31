@@ -84,16 +84,19 @@
     display:flex; align-items:center; justify-content:space-between;
     height:76px;
   }
-  .logo-mark{display:flex; align-items:center; gap:10px;}
+  .logo-mark{display:flex; align-items:center; gap:10px; min-width:0;}
   .logo-mark img{height:26px; width:auto;}
   .navlinks{display:flex; align-items:center; gap:34px; font-size:14px; font-weight:600;}
   .navlinks a{color:var(--white); opacity:0.85; transition:opacity .2s, color .2s;}
   .navlinks a:hover{opacity:1; color:var(--blue-soft);}
-  .nav-cta{display:flex; align-items:center; gap:18px;}
-  .nav-cta .btn{border-color:var(--red); color:var(--white); background:var(--red);}
+  .nav-cta{display:flex; align-items:center; gap:18px; flex:none;}
+  .nav-cta .btn{border-color:var(--red); color:var(--white); background:var(--red); white-space:nowrap;}
   .nav-cta .btn:hover{background:#c30200; color:var(--white);}
-  .burger{display:none; background:none; border:none; color:var(--white); font-size:22px; cursor:pointer;}
+  .nav-mobile-cta{display:none;}
+  .burger{display:none; background:none; border:none; color:var(--white); font-size:22px; cursor:pointer; padding:4px; flex:none;}
   @media (max-width:900px){
+    .logo-mark img{height:22px;}
+    .nav-cta .btn{display:none;}
     .navlinks{
       position:fixed; top:76px; left:0; right:0;
       background:var(--navy);
@@ -105,6 +108,7 @@
     }
     .navlinks.open{transform:translateY(0);}
     .burger{display:block;}
+    .nav-mobile-cta{display:inline-flex; margin-top:6px;}
   }
 
   /* ---------- HERO ---------- */
@@ -314,8 +318,9 @@
   .footer-note{font-family:'Space Mono',monospace; font-size:11.5px; color:rgba(255,255,255,0.4);}
   @media (max-width:800px){.footer-top{grid-template-columns:1fr;}}
 
-  /* reveal on scroll */
-  .reveal{opacity:0; transform:translateY(24px); transition:opacity .7s ease, transform .7s ease;}
+  /* reveal on scroll (progressive enhancement only - never hides content) */
+  .reveal{opacity:1; transform:translateY(0); transition:opacity .7s ease, transform .7s ease;}
+  .reveal.pending{opacity:0; transform:translateY(24px);}
   .reveal.in{opacity:1; transform:translateY(0);}
 </style>
 </head>
@@ -332,6 +337,7 @@
       <a href="#clientes">Clientes</a>
       <a href="#parcerias">Parcerias</a>
       <a href="#contato">Contato</a>
+      <a class="btn btn-solid nav-mobile-cta" href="https://wa.me/5519993605869" target="_blank" rel="noopener">Falar no WhatsApp</a>
     </div>
     <div class="nav-cta">
       <a class="btn" href="https://wa.me/5519993605869" target="_blank" rel="noopener">Falar no WhatsApp</a>
@@ -579,11 +585,25 @@
   burger.addEventListener('click', () => navlinks.classList.toggle('open'));
   navlinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navlinks.classList.remove('open')));
 
-  const revealEls = document.querySelectorAll('.reveal');
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
-  }, {threshold:0.15});
-  revealEls.forEach(el => io.observe(el));
+  // Progressive-enhancement scroll reveal. Content is visible by default (CSS .reveal
+  // starts at opacity:1); we only add the "pending" (hidden) state right before observing,
+  // and always have a fallback that reveals everything, so nothing can get stuck invisible.
+  try {
+    if ('IntersectionObserver' in window) {
+      const revealEls = document.querySelectorAll('.reveal');
+      revealEls.forEach(el => el.classList.add('pending'));
+      const io = new IntersectionObserver((entries) => {
+        entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); io.unobserve(e.target); } });
+      }, {threshold:0.1, rootMargin:'0px 0px -5% 0px'});
+      revealEls.forEach(el => io.observe(el));
+      // Safety net: if anything is still pending after 4s (observer glitch, etc.), show it anyway.
+      setTimeout(() => {
+        document.querySelectorAll('.reveal.pending:not(.in)').forEach(el => el.classList.add('in'));
+      }, 4000);
+    }
+  } catch (e) {
+    document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
+  }
 </script>
 
 </body>
