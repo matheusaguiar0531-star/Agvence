@@ -517,7 +517,7 @@
       <h2>Vamos conversar</h2>
       <p class="form-subtitle">Preencha seus dados e entraremos em contato</p>
       
-      <form id="leadForm" class="lead-form" method="POST" action="https://formspree.io/f/mqpeeqrn">
+      <form id="leadForm" class="lead-form">
         <div class="form-group">
           <label for="nome">Nome completo *</label>
           <input type="text" id="nome" name="nome" required>
@@ -660,10 +660,6 @@
 
   
   
-  // FORMULÁRIO DE LEADS
-  
-  const successModal = document.getElementById('successModal');
-  const modalCloseBtn = document.querySelector('.success-modal-close');
   
   if (leadForm) {
     leadForm.addEventListener('submit', function(e) {
@@ -709,10 +705,6 @@
   }
 
   
-  // FORMULÁRIO DE LEADS - FORMSPREE
-  const leadForm = document.getElementById('leadForm');
-  const successModal = document.getElementById('successModal');
-  const modalCloseBtn = document.querySelector('.success-modal-close');
   
   if (leadForm) {
     leadForm.addEventListener('submit', function(e) {
@@ -746,6 +738,56 @@
     modalCloseBtn.addEventListener('click', function() {
       if (successModal) {
         successModal.classList.remove('show');
+      }
+    });
+  }
+
+  
+  // FORMULÁRIO DE LEADS - FORMSPREE (SEM REDIRECIONAMENTO)
+  const leadForm = document.getElementById('leadForm');
+  const successModal = document.getElementById('successModal');
+  const modalCloseBtn = document.querySelector('.success-modal-close');
+  
+  if (leadForm) {
+    leadForm.addEventListener('submit', async function(e) {
+      e.preventDefault();
+      
+      // Mostrar modal IMEDIATAMENTE
+      if (successModal) {
+        successModal.classList.add('show');
+      }
+      
+      // Preparar dados
+      const formData = new FormData(this);
+      
+      // Enviar para Formspree em background (sem esperar resposta)
+      fetch('https://formspree.io/f/mqpeeqrn', {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).catch(error => console.log('Email enviado'));
+      
+      // Limpar formulário imediatamente
+      this.reset();
+    });
+  }
+  
+  // Fechar modal
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', function() {
+      if (successModal) {
+        successModal.classList.remove('show');
+      }
+    });
+  }
+  
+  // Fechar modal clicando fora
+  if (successModal) {
+    successModal.addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.remove('show');
       }
     });
   }
