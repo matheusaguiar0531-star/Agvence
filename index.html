@@ -647,11 +647,9 @@
       
       // Formatar mensagem para WhatsApp
       const mensagem = `Olá! Meu nome é ${nome}, sou da empresa ${empresa}. Gostaria de saber mais sobre os serviços da Agvence.`;
-      const encodedMensagem = encodeURIComponent(mensagem);
       
-      // Redirecionar para WhatsApp
-      window.open(`https://wa.me/5519993605869?text=${encodedMensagem}`, '_blank');
       
+      // Redirecionar para WhatsApp      
       // Limpar formulário
       leadForm.reset();
       
@@ -675,7 +673,7 @@
       const telefone = document.getElementById('telefone').value;
       
       const mensagem = `Olá! Meu nome é ${nome}, sou da empresa ${empresa}. Telefone: ${telefone}. Gostaria de saber mais sobre os serviços da Agvence.`;
-      const url = `https://wa.me/5519993605869?text=${encodeURIComponent(mensagem)}`;
+      
       
       // Mostrar modal de sucesso
       if (successModal) {
@@ -706,6 +704,48 @@
     successModal.addEventListener('click', function(e) {
       if (e.target === this) {
         this.classList.remove('show');
+      }
+    });
+  }
+
+  
+  // FORMULÁRIO DE LEADS - FORMSPREE
+  const leadForm = document.getElementById('leadForm');
+  const successModal = document.getElementById('successModal');
+  const modalCloseBtn = document.querySelector('.success-modal-close');
+  
+  if (leadForm) {
+    leadForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const formData = new FormData(this);
+      
+      fetch(this.action, {
+        method: 'POST',
+        body: formData,
+        headers: {
+          'Accept': 'application/json'
+        }
+      }).then(response => {
+        if (response.ok) {
+          // Mostrar modal de sucesso
+          if (successModal) {
+            successModal.classList.add('show');
+          }
+          // Limpar formulário
+          leadForm.reset();
+        }
+      }).catch(error => {
+        console.error('Erro:', error);
+      });
+    });
+  }
+  
+  // Fechar modal
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', function() {
+      if (successModal) {
+        successModal.classList.remove('show');
       }
     });
   }
