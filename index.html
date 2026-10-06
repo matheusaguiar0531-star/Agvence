@@ -296,6 +296,22 @@
   .reveal{opacity:1; transform:translateY(0); transition:opacity .7s ease, transform .7s ease;}
   .reveal.pending{opacity:0; transform:translateY(24px);}
   .reveal.in{opacity:1; transform:translateY(0);}
+
+  
+  /* ---------- FORMULÁRIO ========== */
+  .form-section{background:var(--surface); padding:80px 0; border-top:1px solid var(--line-soft); border-bottom:1px solid var(--line-soft);}
+  .form-container{max-width:500px; margin:0 auto;}
+  .form-content h2{font-size:32px; margin-bottom:12px; font-weight:700;}
+  .form-subtitle{color:var(--muted); margin-bottom:32px; font-size:15.5px;}
+  .lead-form{display:flex; flex-direction:column; gap:20px;}
+  .form-group{display:flex; flex-direction:column; gap:8px;}
+  .form-group label{font-size:13px; font-weight:600; color:var(--text); text-transform:uppercase; letter-spacing:0.5px;}
+  .form-group input{padding:12px 16px; border:1px solid var(--line-soft); border-radius:6px; font-size:15px; font-family:inherit; transition:border-color 0.2s;}
+  .form-group input:focus{outline:none; border-color:var(--red);}
+  .form-btn{width:100%; padding:14px; font-size:15px; cursor:pointer;}
+  .form-btn:disabled{opacity:0.6; cursor:not-allowed;}
+  @media (max-width:600px){.form-section{padding:60px 0;} .form-content h2{font-size:24px;}}
+
 </style>
 </head>
 <body>
@@ -311,10 +327,10 @@
       <a href="#portfolio">Portfólio</a>
       <a href="#clientes">Clientes</a>
       <a href="#contato">Contato</a>
-      <a class="btn btn-solid nav-mobile-cta" href="https://wa.me/5519993605869?text=Olá, vim pelo site da agvence e gostaria de saber mais sobre seus serviços" target="_blank" rel="noopener">Quero mais clientes</a>
+      <a class="btn btn-solid nav-mobile-cta" href="#formulario">Quero mais clientes</a>
     </div>
     <div class="nav-cta">
-      <a class="btn" href="https://wa.me/5519993605869?text=Olá, vim pelo site da agvence e gostaria de saber mais sobre seus serviços" target="_blank" rel="noopener">Quero mais clientes</a>
+      <a class="btn" href="#formulario">Quero mais clientes</a>
       <button class="burger" id="burger" aria-label="Abrir menu">☰</button>
     </div>
   </nav>
@@ -331,7 +347,7 @@
       <h1>Vídeos que geram atenção, <span class="red">tráfego que trás clientes</span></h1>
       <p class="lead">Vídeos estratégicos e tráfego pago para empresas de piracicaba.</p>
       <div class="hero-ctas">
-        <a class="btn btn-solid" href="https://wa.me/5519993605869?text=Olá, vim pelo site da agvence e gostaria de saber mais sobre seus serviços" target="_blank" rel="noopener">Quero mais clientes</a>
+        <a class="btn btn-solid" href="#formulario">Quero mais clientes</a>
         <a class="btn btn-ghost" href="#portfolio">Ver portfólio</a>
       </div>
     </div>
@@ -560,7 +576,34 @@
   } catch (e) {
     document.querySelectorAll('.reveal').forEach(el => el.classList.add('in'));
   }
-</script>
+
+  
+  // ========== FORMULÁRIO ========== 
+  const leadForm = document.getElementById('leadForm');
+  if (leadForm) {
+    leadForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const nome = document.getElementById('nome').value;
+      const empresa = document.getElementById('empresa').value;
+      const telefone = document.getElementById('telefone').value;
+      
+      // Formatar mensagem para WhatsApp
+      const mensagem = `Olá! Meu nome é ${nome}, sou da empresa ${empresa}. Gostaria de saber mais sobre os serviços da Agvence.`;
+      const encodedMensagem = encodeURIComponent(mensagem);
+      
+      // Redirecionar para WhatsApp
+      window.open(`https://wa.me/5519993605869?text=${encodedMensagem}`, '_blank');
+      
+      // Limpar formulário
+      leadForm.reset();
+      
+      // Feedback visual
+      alert('Redirecionando para WhatsApp...');
+    });
+  }
+
+  </script>
 
 </body>
 </html>
