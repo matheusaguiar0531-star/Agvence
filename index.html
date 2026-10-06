@@ -312,6 +312,33 @@
   .form-btn:disabled{opacity:0.6; cursor:not-allowed;}
   @media (max-width:600px){.form-section{padding:60px 0;} .form-content h2{font-size:24px;}}
 
+
+  
+  /* FORMULÁRIO */
+  .form-section { padding: 80px 0; background: var(--surface); border-top: 1px solid var(--line-soft); }
+  .form-container { max-width: 500px; margin: 0 auto; }
+  .form-container h2 { font-size: 32px; margin-bottom: 12px; font-weight: 700; }
+  .form-subtitle { color: var(--muted); margin-bottom: 32px; font-size: 15px; }
+  .lead-form { display: flex; flex-direction: column; gap: 20px; }
+  .form-group { display: flex; flex-direction: column; gap: 6px; }
+  .form-group label { font-size: 13px; font-weight: 600; color: var(--text); }
+  .form-group input { padding: 12px 14px; border: 1px solid var(--line-soft); border-radius: 4px; font-size: 15px; font-family: inherit; }
+  .form-group input:focus { outline: none; border-color: var(--red); }
+  .lead-form button { padding: 14px; font-size: 15px; font-weight: 700; }
+  @media (max-width: 700px) { .form-section { padding: 60px 0; } .form-container h2 { font-size: 24px; } }
+
+
+  
+  /* MODAL DE SUCESSO */
+  .success-modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 1000; align-items: center; justify-content: center; }
+  .success-modal.show { display: flex; }
+  .success-modal-content { background: white; padding: 40px; border-radius: 8px; text-align: center; max-width: 400px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); }
+  .success-modal-content h3 { font-size: 24px; margin-bottom: 16px; color: var(--text); }
+  .success-modal-content p { color: var(--muted); font-size: 15px; line-height: 1.6; }
+  .success-modal-close { background: var(--red); color: white; border: none; padding: 12px 32px; border-radius: 4px; font-weight: 600; cursor: pointer; margin-top: 24px; font-size: 14px; }
+  .success-modal-close:hover { background: #c30200; }
+  @media (prefers-color-scheme: dark) { .success-modal-content { background: var(--bg); color: var(--text); } }
+
 </style>
 </head>
 <body>
@@ -482,6 +509,36 @@
     </div>
   </section>
 
+
+<!-- FORMULÁRIO DE LEADS -->
+<section id="formulario" class="form-section">
+  <div class="wrap">
+    <div class="form-container">
+      <h2>Vamos conversar</h2>
+      <p class="form-subtitle">Preencha seus dados e entraremos em contato</p>
+      
+      <form id="leadForm" class="lead-form">
+        <div class="form-group">
+          <label for="nome">Nome completo *</label>
+          <input type="text" id="nome" name="nome" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="empresa">Nome da empresa *</label>
+          <input type="text" id="empresa" name="empresa" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="telefone">Telefone *</label>
+          <input type="tel" id="telefone" name="telefone" required>
+        </div>
+        
+        <button type="submit" class="btn btn-solid">Enviar</button>
+      </form>
+    </div>
+  </div>
+</section>
+
 </main>
 
 <section id="sobre" class="about">
@@ -603,7 +660,67 @@
     });
   }
 
+  
+  
+  // FORMULÁRIO DE LEADS
+  
+  const successModal = document.getElementById('successModal');
+  const modalCloseBtn = document.querySelector('.success-modal-close');
+  
+  if (leadForm) {
+    leadForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      const nome = document.getElementById('nome').value;
+      const empresa = document.getElementById('empresa').value;
+      const telefone = document.getElementById('telefone').value;
+      
+      const mensagem = `Olá! Meu nome é ${nome}, sou da empresa ${empresa}. Telefone: ${telefone}. Gostaria de saber mais sobre os serviços da Agvence.`;
+      const url = `https://wa.me/5519993605869?text=${encodeURIComponent(mensagem)}`;
+      
+      // Mostrar modal de sucesso
+      if (successModal) {
+        successModal.classList.add('show');
+      }
+      
+      // Abrir WhatsApp após um breve delay
+      setTimeout(() => {
+        window.open(url, '_blank');
+      }, 1000);
+      
+      // Limpar formulário
+      this.reset();
+    });
+  }
+  
+  // Fechar modal
+  if (modalCloseBtn) {
+    modalCloseBtn.addEventListener('click', function() {
+      if (successModal) {
+        successModal.classList.remove('show');
+      }
+    });
+  }
+  
+  // Fechar modal clicando fora
+  if (successModal) {
+    successModal.addEventListener('click', function(e) {
+      if (e.target === this) {
+        this.classList.remove('show');
+      }
+    });
+  }
+
   </script>
+
+
+<!-- MODAL DE SUCESSO -->
+<div id="successModal" class="success-modal">
+  <div class="success-modal-content">
+    <h3>✓ Obrigado!</h3>
+    <p>Em breve nosso time entrará em contato</p>
+    <button class="success-modal-close">Fechar</button>
+  </div>
+</div>
 
 </body>
 </html>
