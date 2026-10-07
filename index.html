@@ -506,11 +506,11 @@
     </div>
   </section>
   
-  <div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; align-items:center; justify-content:center;">
-    <div style="background:white; padding:40px; border-radius:8px; text-align:center; max-width:400px;">
-      <h3>✓ Obrigado!</h3>
-      <p>Em breve nosso time entrará em contato</p>
-      <button onclick="fecharModal()">Fechar</button>
+  <div id="modal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.5); z-index:9999; display:none !important;">
+    <div style="position:fixed; top:50%; left:50%; transform:translate(-50%, -50%); background:white; padding:40px; border-radius:8px; text-align:center; max-width:400px; z-index:10000;">
+      <h3 style="font-size:24px; margin-bottom:16px; color:#000;">✓ Obrigado!</h3>
+      <p style="margin-bottom:24px; color:#666;">Em breve nosso time entrará em contato</p>
+      <button onclick="fecharModal()" style="padding:12px 32px; background:#e60300; color:white; border:none; border-radius:4px; font-weight:600; cursor:pointer;">Fechar</button>
     </div>
   </div>
 </main>
@@ -600,7 +600,7 @@
     
     if (nome && empresa && telefone) {
       // Mostrar modal
-      document.getElementById('modal').style.display = 'flex';
+      document.getElementById('modal').style.display = 'block !important';
       
       // Enviar para Formspree
       const data = new FormData();
