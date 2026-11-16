@@ -308,6 +308,18 @@
   #leadForm button:hover { background: #c30200; }
 
 </style>
+<!-- Meta Pixel -->
+<script>
+!function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};if(!f._fbq)f._fbq=n;
+n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,
+document,'script','https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '2684679995394574');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none" src="https://www.facebook.com/tr?id=2684679995394574&ev=PageView&noscript=1"/></noscript>
+<!-- End Meta Pixel -->
 </head>
 <body>
 
@@ -524,7 +536,7 @@
       </div>
       <div class="footer-col">
         <h5>Contato</h5>
-        <a href="https://wa.me/5519993605869" target="_blank" rel="noopener">WhatsApp: (19) 99360-5869</a>
+        <a href="https://wa.me/5519993605869" target="_blank" rel="noopener" onclick="if(window.fbq) fbq('track','Contact');">WhatsApp: (19) 99360-5869</a>
         <a href="mailto:contato@agvence.com">contato@agvence.com</a>
         <a href="https://instagram.com/agvence" target="_blank" rel="noopener" style="display:flex; align-items:center; gap:8px;">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
@@ -613,6 +625,9 @@
         body: data,
         headers: {'Accept': 'application/json'}
       }).catch(e => console.log('Enviado'));
+
+      // Meta Pixel: conta o envio do formulário como Lead
+      if (window.fbq) fbq('track', 'Lead');
       
       // Limpar
       document.getElementById('leadForm').reset();
